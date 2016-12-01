@@ -39,10 +39,8 @@ public class User {
 	}
 	
 	public boolean setUser(User user) {
-		if(this.password.equals(user.password)) {
-			this.userId = user.userId;
+		if(this.checkPassword(user.password)) {
 			this.name = user.name;
-			this.password = user.password;
 			this.email = user.email;
 			
 			return true;
@@ -50,11 +48,15 @@ public class User {
 		return false;
 	}
 	
-/*
+
 	public String getPassword() {
 		return this.password;
 	}
 	
+	public boolean matchId(Long id) {
+		return this.id.equals(id);
+	}
+
 	public String getUserId() {
 		return this.userId;
 	}
@@ -66,10 +68,17 @@ public class User {
 	public String getEmail() {
 		return this.email;
 	}
-*/
+
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + "]";
+	}
+
+	public boolean checkPassword(String password2) {
+		// TODO Auto-generated method stub
+		if(this.password.equals(password2))
+			return true;
+		return false;
 	}
 
 	

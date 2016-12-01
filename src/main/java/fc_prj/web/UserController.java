@@ -2,6 +2,8 @@ package fc_prj.web;
 
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,14 +37,64 @@ public class UserController {
 		return "redirect:/users";
 	}
 	
+	@GetMapping("/loginForm")
+	public String loginForm() {
+		return "/user/login";
+	}
+	
+	@PostMapping("/login")
+	public String login(String userId, String password, HttpSession session) {
+		User user = userRepository.findByUserId(userId);
+		
+		if(user == null) {
+			System.out.println("login() : user null");
+			
+			return "redirect:/users/loginForm";
+		}
+		
+		if(!password.equals(user.getPassword())) {
+			System.out.println("login() : pw wrong");
+			return "redirect:/users/loginForm";
+		}
+		
+		if(!user.checkPassword(password)) {
+			
+		}
+		
+		session.setAttribute("sessionedUser", user);
+		System.out.println("success");
+		
+		return "redirect:/" ;
+	}
+	
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.removeAttribute("sessionedUser");
+		return "redirect:/";
+	}
+	
 	@GetMapping("/form")
 	public String form(Model model) {
 		return "/user/form";
 	}
 	
 	@GetMapping("/{id}/form")
-	public String modifyForm(Model model, @PathVariable Long id) {
-		model.addAttribute("user", userRepository.findOne(id));
+	public String modifyForm(User user, @PathVariable Long id, HttpSession session, Model model) {
+		Object tempUser = session.getAttribute("sessionedUser");
+		if(tempUser == null)
+			return "redirect:/users/loginForm";
+		
+		User loginUser = (User)tempUser;
+		if(!loginUser.matchId(id)) {
+			throw new IllegalStateException("Can't modify others information");
+		}
+		
+		User dbUser = userRepository.findOne(id);
+		dbUser.setUser(user);
+		userRepository.save(dbUser);
+		
+		model.addAttribute("user", dbUser);
+		
 		System.out.println("i'm here");
 		return "/user/modify_form";
 	}
