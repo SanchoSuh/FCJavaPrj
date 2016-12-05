@@ -1,5 +1,8 @@
 package fc_prj.domain;
 
+import java.util.List;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -8,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 
 @Entity
 public class Question {
@@ -29,6 +34,30 @@ public class Question {
 	@Lob
 	private String contents;
 	
+	@OneToMany(mappedBy="question")
+	@OrderBy("id asc")
+	private List<Comment> comments;
+	
+	
+	public Long getId() {
+		return this.id;
+	}
+	public String getTitle() {
+		return this.title;
+	}
+	
+	public String getWriter() {
+		return this.writer;
+	}
+	
+	public String getContents() {
+		return this.contents;
+	}
+	
+	public List<Comment> getComments() {
+		return this.comments;
+	}
+	
 	public void setTitle(String title) {
 		this.title = title;
 	}
@@ -42,5 +71,6 @@ public class Question {
 		this.user = user;
 		this.writer = user.getName(); 
 	}
+	
 	
 }

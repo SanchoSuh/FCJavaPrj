@@ -1,6 +1,8 @@
 package fc_prj.web;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import fc_prj.domain.Comment;
 import fc_prj.domain.Question;
 import fc_prj.domain.QuestionRepository;
 import fc_prj.domain.User;
@@ -56,8 +59,16 @@ public class QuestionController {
 	
 	@GetMapping("/qna/{id}")
 	public String showArticle(@PathVariable Long id, Model model) {
-		model.addAttribute("question", questionRepository.findOne(id));
+		Question question = questionRepository.getOne(id);
+		List<Comment> comments = question.getComments();
+		
+		System.out.println(question.getTitle());
+		System.out.println(comments.size());
+	
+		model.addAttribute("question", question);
+		model.addAttribute("comments", comments);
 		
 		return "/qna/show";
 	}
+
 }
