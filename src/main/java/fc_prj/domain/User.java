@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 public class User {
 	@Id
@@ -12,14 +14,17 @@ public class User {
 	private Long id;
 	
 	@Column(unique=true, nullable=false, length=20)
+	@JsonProperty
 	private String userId;
 	
 	@Column(nullable=false, length=20)
 	private String password;
 	
 	@Column(nullable=false, length=20)
+	@JsonProperty
 	private String name;
 	
+	@JsonProperty
 	private String email;
 
 	public void setUserId(String userId) {
